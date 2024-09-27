@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
                         ,
                         contentAlignment = Alignment.Center
                     ) {
-                        AnimationDemoApp()
+                        Playground()
                     }
                 }
             }

@@ -1,60 +1,58 @@
 package io.devexpert.training.ui
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 
-object TopWithFooter : Arrangement.Vertical {
-    override fun Density.arrange(
-        totalSize: Int,
-        sizes: IntArray,
-        outPositions: IntArray
-    ) {
-        var y = 0
-        sizes.forEachIndexed { index, size ->
-            outPositions[index] = y
-            y += size
-        }
-        if (y < totalSize) {
-            val lastIndex = outPositions.lastIndex
-            outPositions[lastIndex] = totalSize - sizes.last()
-        }
-    }
+sealed class ListItem {
+    data class Header(val title: String) : ListItem()
+    data class Content(val text: String) : ListItem()
 }
 
 @Composable
 fun Playground() {
-    val listState = rememberLazyListState()
-    val items = (1..5).toList()
+    val items = listOf(
+        ListItem.Header("Header 1"),
+        ListItem.Content("Content A"),
+        ListItem.Content("Content B"),
+        ListItem.Header("Header 2"),
+        ListItem.Content("Content C"),
+        ListItem.Content("Content D")
+    )
 
-    LazyColumn(
-        state = listState,
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = TopWithFooter
-    ) {
-
-        items(items) { item ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text(
-                    text = "Item $item",
-                    modifier = Modifier.padding(16.dp)
-                )
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(items = items, contentType = { it.javaClass }) { item ->
+            when (item) {
+                is ListItem.Header -> {
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.secondary
+                    ) {
+                        Text(
+                            text = item.title,
+                            modifier = Modifier.padding(16.dp),
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
+                }
+                is ListItem.Content -> {
+                    Text(
+                        text = item.text,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         }
-
     }
 }

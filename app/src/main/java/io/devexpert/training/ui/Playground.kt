@@ -1,23 +1,29 @@
 package io.devexpert.training.ui
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun Playground() {
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val path = Path().apply {
-            moveTo(0f, 0f)
-            lineTo(size.width / 2f, size.height / 2f)
-            lineTo(size.width, 0f)
-            close()
-        }
-        drawPath(path, Color.Magenta, style = Stroke(width = 4.dp.toPx()))
-    }
+    Text(
+        text = "Hola",
+        modifier = Modifier
+            .drawWithContent {
+                // Dibujar círculo de fondo
+                drawCircle(color = Color.Cyan, radius = 30.dp.toPx())
+
+                // Dibujar el contenido original (el texto)
+                drawContent()
+
+                // Dibujar círculo por encima
+                drawCircle(color = Color.Red, radius = 10.dp.toPx())
+            }
+    )
 }

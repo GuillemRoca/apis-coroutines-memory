@@ -13,6 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -54,7 +55,18 @@ fun Playground() {
         contentScale = ContentScale.Fit,
         modifier = Modifier
             .size(100.dp)
-            .scale(abs(offset.value.x / 100 + 1f), abs(offset.value.y / 100 + 1f))
+            .graphicsLayer {
+                with(offset.value) {
+                    scaleX = abs(x / 100 + 1f)
+                    scaleY = abs(y / 100 + 1f)
+                    translationX = x
+                    translationY = y
+                    shadowElevation = abs(x / 10)
+                    rotationX = x / 10
+                    rotationY = y / 10
+                    alpha = 1 - (abs(x) + abs(y)) / 1000
+                }
+            }
             .then(dragModifier)
     )
 }

@@ -1,29 +1,31 @@
 package io.devexpert.training.ui
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @Composable
 fun Playground() {
     Text(
-        text = "Hola",
+        "Hello Compose!",
         modifier = Modifier
-            .drawWithContent {
-                // Dibujar círculo de fondo
-                drawCircle(color = Color.Cyan, radius = 30.dp.toPx())
-
-                // Dibujar el contenido original (el texto)
-                drawContent()
-
-                // Dibujar círculo por encima
-                drawCircle(color = Color.Red, radius = 10.dp.toPx())
+            .drawWithCache {
+                val brush = Brush.linearGradient(
+                    listOf(Color.Cyan, Color.Green)
+                )
+                onDrawBehind {
+                    drawRoundRect(
+                        brush,
+                        cornerRadius = CornerRadius(10.dp.toPx())
+                    )
+                }
             }
+            .padding(8.dp)
     )
 }

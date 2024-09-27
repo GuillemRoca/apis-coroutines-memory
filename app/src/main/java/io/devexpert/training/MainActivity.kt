@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import io.devexpert.training.ui.AnimationDemoApp
 import io.devexpert.training.ui.Playground
 import io.devexpert.training.ui.theme.ApiscoroutinesmemoryTheme
 
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
                         ,
                         contentAlignment = Alignment.Center
                     ) {
-                        Playground()
+                        AnimationDemoApp()
                     }
                 }
             }

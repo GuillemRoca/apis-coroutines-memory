@@ -1,10 +1,10 @@
 package io.devexpert.training.ui
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -20,19 +20,26 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Playground() {
-    var visible by remember { mutableStateOf(true) }
-    Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
-        Button(onClick = { visible = !visible }) {
-            Text("Toggle Visibility")
+    var showFirst by remember { mutableStateOf(true) }
+    Column(modifier = Modifier
+        .padding(16.dp)
+        .fillMaxWidth()) {
+        Button(onClick = { showFirst = !showFirst }) {
+            Text("Switch Content")
         }
         Spacer(modifier = Modifier.height(8.dp))
-        AnimatedVisibility(visible = visible) {
-            Text(
-                "This content appears and disappears smoothly.",
-                modifier = Modifier
-                    .background(Color.Yellow)
-                    .padding(16.dp)
-            )
+        Crossfade(
+            targetState = showFirst,
+            label = "Crossfade"
+        ) { isFirst ->
+            if (isFirst) {
+                Text("First content", modifier = Modifier.background(Color.Red.copy(alpha = 0.3f)))
+            } else {
+                Text(
+                    "Second content",
+                    modifier = Modifier.background(Color.Blue.copy(alpha = 0.3f))
+                )
+            }
         }
     }
 }

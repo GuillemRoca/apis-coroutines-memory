@@ -6,20 +6,20 @@ import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import io.devexpert.training.R
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 @Composable
 fun Playground() {
@@ -54,7 +54,7 @@ fun Playground() {
         contentScale = ContentScale.Fit,
         modifier = Modifier
             .size(100.dp)
-            .offset { IntOffset(offset.value.x.toInt(), offset.value.y.toInt()) }
+            .scale(abs(offset.value.x / 100 + 1f), abs(offset.value.y / 100 + 1f))
             .then(dragModifier)
     )
 }

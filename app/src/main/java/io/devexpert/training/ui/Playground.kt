@@ -1,10 +1,10 @@
 package io.devexpert.training.ui
 
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -20,24 +20,18 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Playground() {
-    var expanded by remember { mutableStateOf(false) }
-    Column(modifier = Modifier.padding(16.dp)) {
-        Button(onClick = { expanded = !expanded }) {
-            Text("Toggle Content")
+    var visible by remember { mutableStateOf(true) }
+    Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
+        Button(onClick = { visible = !visible }) {
+            Text("Toggle Visibility")
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Box(
-            modifier = Modifier
-                .background(Color.LightGray)
-                .animateContentSize()
-        ) {
+        AnimatedVisibility(visible = visible) {
             Text(
-                text = if (expanded) {
-                    "This is expanded content with more text."
-                } else {
-                    "Click to expand."
-                },
-                modifier = Modifier.padding(16.dp)
+                "This content appears and disappears smoothly.",
+                modifier = Modifier
+                    .background(Color.Yellow)
+                    .padding(16.dp)
             )
         }
     }

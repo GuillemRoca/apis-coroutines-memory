@@ -33,7 +33,12 @@ fun Playground() {
 
     Column(modifier = Modifier.padding(16.dp)) {
         Button(onClick = {
-            // Call CPU-intensive task
+            scope.launch(Dispatchers.Default) {
+                val result = performCPUTask()
+                withContext(Dispatchers.Main) {
+                    cpuResult = result
+                }
+            }
         }) {
             Text("Run CPU Task")
         }
@@ -42,7 +47,12 @@ fun Playground() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
-            // Call I/O task
+            scope.launch(Dispatchers.IO) {
+                val result = performIOTask()
+                withContext(Dispatchers.Main) {
+                    ioResult = result
+                }
+            }
         }) {
             Text("Run IO Task")
         }

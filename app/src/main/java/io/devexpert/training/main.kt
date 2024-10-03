@@ -1,20 +1,22 @@
 package io.devexpert.training
 
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 
-fun main() = runBlocking {
-    val job = launch {
-        repeat(1000) { i ->
-            println("Coroutine is working: $i")
-            delay(500)
-        }
+class SampleActivity : ComponentActivity() {
+
+    private lateinit var scope: CoroutineScope
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        scope = CoroutineScope(Dispatchers.Main)
     }
 
-    delay(1500) // Let the coroutine run for a while
-    println("Main: I'm tired of waiting!")
-    job.cancel() // Cancel the coroutine
-    job.join() // Wait for the coroutine to finish cancellation
-    println("Main: Now I can continue!")
+    override fun onDestroy() {
+        scope.cancel()
+        super.onDestroy()
+    }
 }

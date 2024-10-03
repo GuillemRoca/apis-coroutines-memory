@@ -1,23 +1,29 @@
 package io.devexpert.training
+import kotlinx.coroutines.*
 
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.supervisorScope
+suspend fun cancellableFunction() {
+    var i = 0
+    while (true) {
+        // Simulate some work
+        Thread.sleep(100)
+        i++
+        println("Working... $i")
+        yield() // Cancellation point
+    }
+}
 
-fun main(): Unit = runBlocking {
-    val handler = CoroutineExceptionHandler { _, exception ->
-        println("Caught $exception")
+fun main() = runBlocking {
+    val job = launch {
+        try {
+            cancellableFunction()
+        } finally {
+            println("Cleaning up resources...")
+        }
     }
 
-    supervisorScope {
-        launch(handler) {
-            throw RuntimeException("Error in task 1")
-        }
-        launch {
-            delay(100)
-            println("Task 2 completed")
-        }
-    }
+    delay(550) // Let it run for a bit
+    println("Cancelling the job...")
+    job.cancelAndJoin()
+
+    println("Main: Done")
 }

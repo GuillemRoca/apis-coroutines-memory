@@ -2,15 +2,9 @@ package io.devexpert.training.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,11 +27,8 @@ fun Playground() {
 
     Column(modifier = Modifier.padding(16.dp)) {
         Button(onClick = {
-            scope.launch(Dispatchers.Default) {
-                val result = performCPUTask()
-                withContext(Dispatchers.Main) {
-                    cpuResult = result
-                }
+            scope.launch {
+                cpuResult = performCPUTask()
             }
         }) {
             Text("Run CPU Task")
@@ -48,10 +39,7 @@ fun Playground() {
 
         Button(onClick = {
             scope.launch(Dispatchers.IO) {
-                val result = performIOTask()
-                withContext(Dispatchers.Main) {
-                    ioResult = result
-                }
+                ioResult = performIOTask()
             }
         }) {
             Text("Run IO Task")
@@ -60,17 +48,17 @@ fun Playground() {
     }
 }
 
-fun performCPUTask(): String {
+suspend fun performCPUTask(): String = withContext(Dispatchers.Default) {
     // Simulate CPU-intensive task
     var result = 0
     for (i in 1..1_000_000) {
         result += i
     }
-    return "Sum: $result"
+    "Sum: $result"
 }
 
-suspend fun performIOTask(): String {
+suspend fun performIOTask(): String = withContext(Dispatchers.IO) {
     // Simulate I/O operation
     delay(2000)
-    return "Data fetched successfully"
+    "Data fetched successfully"
 }

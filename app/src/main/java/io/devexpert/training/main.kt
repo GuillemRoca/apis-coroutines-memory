@@ -6,13 +6,15 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     val job = launch {
-        repeat(5) { i ->
+        repeat(1000) { i ->
             println("Coroutine is working: $i")
             delay(500)
         }
     }
 
-    println("Main: Waiting for the coroutine to finish...")
-    job.join()
+    delay(1500) // Let the coroutine run for a while
+    println("Main: I'm tired of waiting!")
+    job.cancel() // Cancel the coroutine
+    job.join() // Wait for the coroutine to finish cancellation
     println("Main: Now I can continue!")
 }

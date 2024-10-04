@@ -1,33 +1,32 @@
 package io.devexpert.training
 
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-// Create a MutableSharedFlow for events
-// Implement a function to send an event
-// Create two collectors that print received events
-// Send 5 events with a delay between each
+// Create a channel for integers
+// Launch a producer coroutine that sends 5 integers to the channel
+// Launch a consumer coroutine that receives from the channel and prints each value
+// Close the channel after sending all values
 
 fun main() = runBlocking {
-    val events = MutableSharedFlow<String>()
+    val channel = Channel<Int>()
 
     launch {
-        events.collect { event ->
-            println("Collector 1 received: $event")
+        for (i in 1..5) {
+            delay(100)
+            channel.send(i)
+            println("Sent $i")
+        }
+        channel.close()
+    }
+
+    launch {
+        for (value in channel) {
+            println("Received $value")
         }
     }
 
-    launch {
-        events.collect { event ->
-            println("Collector 2 received: $event")
-        }
-    }
-
-    repeat(5) {
-        delay(100)
-        events.emit("Event ${it + 1}")
-    }
+    delay(1000)
 }

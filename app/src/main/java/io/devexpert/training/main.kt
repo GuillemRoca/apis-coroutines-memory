@@ -1,28 +1,33 @@
 package io.devexpert.training
 
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-// Create a MutableStateFlow for the counter
-// Implement a function to increment the counter
-// Collect the StateFlow and print each value
-// Increment the counter 5 times with a delay between each increment
+// Create a MutableSharedFlow for events
+// Implement a function to send an event
+// Create two collectors that print received events
+// Send 5 events with a delay between each
 
 fun main() = runBlocking {
-    val counter = MutableStateFlow(0)
+    val events = MutableSharedFlow<String>()
 
     launch {
-        counter.collect { value ->
-            println("Counter value: $value")
+        events.collect { event ->
+            println("Collector 1 received: $event")
+        }
+    }
+
+    launch {
+        events.collect { event ->
+            println("Collector 2 received: $event")
         }
     }
 
     repeat(5) {
         delay(100)
-        counter.value++
+        events.emit("Event ${it + 1}")
     }
-
-    delay(1000)
 }

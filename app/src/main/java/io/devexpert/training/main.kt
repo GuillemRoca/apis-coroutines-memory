@@ -1,29 +1,18 @@
 package io.devexpert.training
-import kotlinx.coroutines.*
 
-suspend fun cancellableFunction() {
-    var i = 0
-    while (true) {
-        // Simulate some work
-        Thread.sleep(100)
-        i++
-        println("Working... $i")
-        yield() // Cancellation point
-    }
-}
+// Create a sequence of numbers from 1 to 100
+// Filter out odd numbers
+// Multiply each number by 2
+// Take the first 10 elements
+// Print the result
 
-fun main() = runBlocking {
-    val job = launch {
-        try {
-            cancellableFunction()
-        } finally {
-            println("Cleaning up resources...")
-        }
-    }
+fun main() {
+    val result = (1..100)
+        .asSequence()
+        .filter { it % 2 == 0 }
+        .map { it * 2 }
+        .take(10)
+        .toList()
 
-    delay(550) // Let it run for a bit
-    println("Cancelling the job...")
-    job.cancelAndJoin()
-
-    println("Main: Done")
+    println(result)
 }

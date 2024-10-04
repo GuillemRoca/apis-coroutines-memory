@@ -1,18 +1,28 @@
 package io.devexpert.training
 
-// Create a sequence of numbers from 1 to 100
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
+
+// Create a flow that emits numbers from 1 to 5
+// with a 100ms delay between each emission
+// Double each number
 // Filter out odd numbers
-// Multiply each number by 2
-// Take the first 10 elements
-// Print the result
+// Collect and print the results
 
-fun main() {
-    val result = (1..100)
-        .asSequence()
-        .filter { it % 2 == 0 }
+fun main() = runBlocking {
+    val flow = flow {
+        for (i in 1..5) {
+            delay(100)
+            emit(i)
+        }
+    }
         .map { it * 2 }
-        .take(10)
-        .toList()
+        .filter { it % 2 == 0 }
 
-    println(result)
+    flow.collect { value ->
+        println(value)
+    }
 }

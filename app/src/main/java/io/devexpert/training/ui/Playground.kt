@@ -9,6 +9,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.inset
 import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.unit.dp
 import kotlin.math.min
 
@@ -18,7 +19,11 @@ fun Playground() {
         val minSize = size.minDimension / 2f
         val offsetX = (size.width - minSize) / 2f
         val offsetY = (size.height - minSize) / 2f
-        inset(20.dp.toPx()) {
+        withTransform({
+            rotate(45f)
+            translate(60f, 60f)
+            scale(0.5f)
+        }) {
             drawRect(
                 color = Color.Red,
                 topLeft = Offset(offsetX, offsetY),

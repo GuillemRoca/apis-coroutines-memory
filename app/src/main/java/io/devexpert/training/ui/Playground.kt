@@ -7,21 +7,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 
 @Composable
 fun Playground() {
-    //Text("Hello, World!")
     Canvas(modifier = Modifier.fillMaxSize()) {
-        drawRect(color = Color.Yellow, size = size / 2f, topLeft = Offset(300f, 300f))
-        drawCircle(color = Color.Green, center = center, radius = size.width / 4f)
+        val minSize = size.minDimension / 2f
+        val offsetX = (size.width - minSize) / 2f
+        val offsetY = (size.height - minSize) / 2f
+        drawRect(
+            color = Color.Magenta,
+            topLeft = Offset(offsetX, offsetY),
+            size = Size(minSize,minSize)
+        )
     }
-    Spacer(
-        modifier = Modifier
-            .fillMaxSize()
-            .drawBehind {
-                drawRect(color = Color.Magenta, size = size / 2f, topLeft = Offset(200f, 200f))
-                drawCircle(color = Color.Blue, radius = 100f, center = Offset(300f, 300f))
-            }
-    )
 }

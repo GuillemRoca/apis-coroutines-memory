@@ -1,7 +1,9 @@
 package io.devexpert.training.ui
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -30,6 +32,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.inset
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
@@ -37,18 +40,35 @@ import kotlin.math.min
 
 @Composable
 fun Playground() {
-    var scale by remember { mutableFloatStateOf(1f) }
-    val animatedScale by animateFloatAsState(targetValue = scale, label = "scale")
+    var seed by remember { mutableFloatStateOf(0f) }
+    val transition = updateTransition(
+        targetState = seed,
+        label = "scaleTransition"
+    )
+    val scale by transition.animateFloat(label = "scale") { targetValue ->
+        if (targetValue == 1f) 1f else 1.5f
+    }
+
+    val rotate by transition.animateFloat(label = "rotate") { targetValue ->
+        if (targetValue == 1f) 0f else 90f
+    }
 
     Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        Button(onClick = { scale = if (scale == 1f) 1.5f else 1f }) {
+        Button(onClick = {
+            seed = if(seed == 0f) 1f else 0f
+        }) {
             Text("Toggle Scale")
         }
         Spacer(modifier = Modifier.height(32.dp))
         Box(
             modifier = Modifier
                 .size(100.dp)
-                .scale(animatedScale)
+                .graphicsLayer {
+                    this.alpha = alpha
+                    scaleX = scale
+                    scaleY = scale
+                    rotationZ = rotate
+                }
                 .background(Color.Green)
         ) {
             Text("Scaling", modifier = Modifier.align(Alignment.Center))

@@ -51,49 +51,46 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.min
 
 @Composable
 fun Playground() {
-    val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-    val showScrollToTop by remember { derivedStateOf { listState.firstVisibleItemIndex > 5 } }
+    var cpuResult by remember { mutableStateOf("") }
+    var ioResult by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp)
-        ) {
-            items(100) { index ->
-                Card(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Item $index",
-                        modifier = Modifier
-                            .padding(16.dp)
-                    )
-
-
-                }
-            }
+    Column(modifier = Modifier.padding(16.dp)) {
+        Button(onClick = {
+            // Call CPU-intensive task
+        }) {
+            Text("Run CPU Task")
         }
-        if (showScrollToTop) {
-            FloatingActionButton(
-                onClick = {
-                    coroutineScope.launch {
-                        listState.animateScrollToItem(0)
-                    }
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp)
-            ) {
-                Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Scroll to Top")
-            }
+        Text("CPU Result: $cpuResult")
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = {
+            // Call I/O task
+        }) {
+            Text("Run IO Task")
         }
+        Text("IO Result: $ioResult")
     }
+}
+
+fun performCPUTask(): String {
+    // Simulate CPU-intensive task
+    var result = 0
+    for (i in 1..1_000_000) {
+        result += i
+    }
+    return "Sum: $result"
+}
+
+suspend fun performIOTask(): String {
+    // Simulate I/O operation
+    delay(2000)
+    return "Data fetched successfully"
 }

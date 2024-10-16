@@ -82,7 +82,10 @@ fun Playground() {
         Button(onClick = {
             // Call I/O task
             scope.launch(Dispatchers.IO) {
-                ioResult = performIOTask()
+                val result = performIOTask()
+                withContext(Dispatchers.Main) {
+                    ioResult = result
+                }
             }
         }) {
             Text("Run IO Task")

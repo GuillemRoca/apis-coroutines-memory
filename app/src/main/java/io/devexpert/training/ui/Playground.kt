@@ -51,8 +51,10 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.min
 
 @Composable
@@ -64,6 +66,12 @@ fun Playground() {
     Column(modifier = Modifier.padding(16.dp)) {
         Button(onClick = {
             // Call CPU-intensive task
+            scope.launch(Dispatchers.Default) {
+                val result = performCPUTask()
+                withContext(Dispatchers.Main) {
+                    cpuResult = result
+                }
+            }
         }) {
             Text("Run CPU Task")
         }
@@ -73,6 +81,9 @@ fun Playground() {
 
         Button(onClick = {
             // Call I/O task
+            scope.launch(Dispatchers.IO) {
+                ioResult = performIOTask()
+            }
         }) {
             Text("Run IO Task")
         }
